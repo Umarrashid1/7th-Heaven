@@ -221,6 +221,7 @@ namespace Iros.Workshop.ConfigSettings
         public void OverrideInternalKeys(bool debug = false)
         {
             // first launch the Sys Path was not setup correctly yet so _toml is null
+
             if(_toml == null)
             {
                 _pathToFFNxToml = Sys.PathToFFNxToml;

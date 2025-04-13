@@ -193,8 +193,8 @@ namespace AppUI.Classes
                     var result = MessageDialogWindow.Show(ResourceHelper.Get(StringKey.FF7SteamNotInstalledCorrectly), "", MessageBoxButton.OK, MessageBoxImage.Warning);
                     if (result.Result == MessageBoxResult.OK)
                     {
-                        runAsVanilla = true;
-                        goto LaunchGame;
+                       // runAsVanilla = true;
+                        //goto LaunchGame;
                     }
                 }
             }
@@ -204,13 +204,13 @@ namespace AppUI.Classes
             //
             FFNxDriverUpdater.CleanupUnnecessaryFiles();
 
-            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingInstalledGameIsCompatible));
-            if (converter.IsGamePirated())
-            {
-                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.ErrorCodeYarr), NLog.LogLevel.Error);
-                Logger.Info(FileUtils.ListAllFiles(converter.InstallPath));
-                return false;
-            }
+            //Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingInstalledGameIsCompatible));
+            //if (converter.IsGamePirated())
+            //{
+              //  Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.ErrorCodeYarr), NLog.LogLevel.Error);
+                //Logger.Info(FileUtils.ListAllFiles(converter.InstallPath));
+                //return false;
+            //}
 
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CreatingMissingRequiredDirectories));
             converter.CreateMissingDirectories();
@@ -388,8 +388,8 @@ namespace AppUI.Classes
                 // Create Runtime Profile for Active Mods
                 //
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CreatingRuntimeProfile));
-                runtimeProfile = CreateRuntimeProfile();
 
+                runtimeProfile = CreateRuntimeProfile();
                 if (runtimeProfile == null)
                 {
                     Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedToCreateRuntimeProfileForActiveMods)}", NLog.LogLevel.Error);
@@ -406,11 +406,13 @@ namespace AppUI.Classes
                 // Inherit FFNx Config keys from each mod
                 //
                 Sys.FFNxConfig.Reload();
+
                 Sys.FFNxConfig.Backup(true);
                 Sys.FFNxConfig.OverrideInternalKeys(debug && runtimeProfile != null);
+
                 foreach (RuntimeMod mod in runtimeProfile.Mods)
                 {
-                    foreach(FFNxFlag flag in mod.FFNxConfig)
+                    foreach (FFNxFlag flag in mod.FFNxConfig)
                     {
                         bool addConfig = true;
 
@@ -418,9 +420,9 @@ namespace AppUI.Classes
                         {
                             foreach (var attr in flag.Attributes)
                             {
-                                foreach(Iros.Workshop.ProfileItem item in Sys.ActiveProfile.ActiveItems)
+                                foreach (Iros.Workshop.ProfileItem item in Sys.ActiveProfile.ActiveItems)
                                 {
-                                    foreach(ProfileSetting setting in item.Settings)
+                                    foreach (ProfileSetting setting in item.Settings)
                                     {
                                         if (setting.ID == attr.Key && setting.Value != attr.Value) addConfig = false;
                                     }
@@ -555,7 +557,8 @@ namespace AppUI.Classes
                         try
                         {
                             ff7Proc.Kill();
-                        }catch { }
+                        }
+                        catch { }
                         Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.ReceivedUnknownError)}: {e.Message} ...", NLog.LogLevel.Warn);
                     }
                 }
@@ -658,7 +661,7 @@ namespace AppUI.Classes
                     // Restore FFNx config after the game is closed
                     Sys.FFNxConfig.RestoreBackup(true);
                 };
-            
+
 
                 // ensure ff7 window is active at end of launching
                 if (ff7Proc.MainWindowHandle != IntPtr.Zero)
@@ -717,6 +720,8 @@ namespace AppUI.Classes
         internal static RuntimeProfile CreateRuntimeProfile()
         {
             List<RuntimeMod> runtimeMods = null;
+
+          
 
             try
             {
@@ -966,7 +971,8 @@ namespace AppUI.Classes
                             {
                                 var currentVar = new AppWrapper.Variable() { Name = xmlNode.Attributes.GetNamedItem("Name").Value, Value = item.ModID.ToString() };
                                 var test = vars.Find(var => var.Name == currentVar.Name);
-                                if (test == null){
+                                if (test == null)
+                                {
                                     vars.Add(currentVar);
                                 }
                                 else
@@ -1662,7 +1668,8 @@ namespace AppUI.Classes
                                 mainWindowHandle = FindWindow(null, program.WindowTitle);
                             }
 
-                        };
+                        }
+                        ;
                     }
 
                     // force the process to become minimized
